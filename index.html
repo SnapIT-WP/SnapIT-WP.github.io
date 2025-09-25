@@ -1,130 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SnapIT Office Check In</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="index.scss">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
   </head>
-  <body>
-    <script src="index.js"></script>
-    <div class="welcome">
+  <body class="bg-light">
+    <div class="container">
+      <div class="welcome">
         <h1>Welcome to SnapIT Solutions</h1>
         <h2>Please Sign Our Guestbook</h2>
         <p>Your information is private and will not be sold or shared.</p>
-    </div>
-    <div class="form">
-        <form>
-            <div class="field">
-                <label class="label" for="name">Name</label>
-                <input 
-                    type="text" 
-                    name="Name"/>
-            </div>
-            <div class="field">
-                <label class="label" for="email">Email</label>
-                <input 
-                    type="text" 
-                    name="Email" />
-            </div>
-            <div class="field">
-                <label class="label" for="phone">Phone</label>
-                <input 
-                    type="text" 
-                    name="phone" />
-            </div>
-            <div class="field">
-                <label class="label" for="note">Note</label>
-                <input 
-                    type="text" 
-                    name="note" />
-            </div>
-            <div class="submit">
-                <input 
-                type="submit" 
-                id="submit-button" 
-                onclick="document.getElementById('form').reset(); document.getElementById('fileNameDisplay').textContent = 'No file selected';"
-                  />
-            </div>
+      </div>
+      <div class="form-container">
+        <h4 class="text-center mb-4">Form Submission to Google Sheet</h4>
+        <form id="submit-to-google-sheet">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              class="form-control"
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="slip">Phone:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="phone"
+              id="phone"
+              placeholder="Phone Number"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="loc">Note:</label>
+            <textarea
+              class="form-control"
+              name="note"
+              id="note"
+              placeholder="Note (optional)"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            Submit
+          </button>
         </form>
-    </div>    
-    <div
-      id="message"
-      style="
-        display: none;
-        margin: 20px;
-        padding: 10px;
-        border-radius: 4px;
-        font-weight: bold;
-      "
-    ></div>
-    
+      </div>
+    </div>
+
     <script>
-      const form = document.getElementById("form");
-      const submitButton = document.getElementById("submit-button");
-      const messageDiv = document.getElementById("message");
-
-
-      // Function to handle submit
-      form.addEventListener("submit", async function (e) {
+      const scriptURL =                       
+      "https://script.google.com/macros/s/AKfycbxyv4ijv7azb3Me-hWfx3LJM9CHdPaNhCSzFHZL7SngfXI67LnJR7vhK2bKgHH43W8IyA/exec";
+      const form = document.forms["submit-to-google-sheet"];
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
+        var formData = new FormData(form);
+        var ex = document.getElementById("ex").checked;
+        var age = document.getElementById("age").checked;
 
-        messageDiv.textContent = "Submitting...";
-        messageDiv.style.display = "block";
-        messageDiv.style.backgroundColor = "beige";
-        messageDiv.style.color = "black";
-        submitButton.disabled = true;
-        submitButton.classList.add("is-loading");
-
-        try {
-          const formData = new FormData(this);
-          const formDataObj = {};
-
-          // Convert FormData to object
-          for (let [key, value] of formData.entries()) {
-            formDataObj[key] = value;
-          }
-
-          // Submit form data
-          const scriptURL =
-            "https://script.google.com/macros/s/AKfycbxvZLpedeVMPB7KiR4WLTSXjr63BV5k6EEErinZNPst8GmXBV1RXI2d2kbFyxy6Im3f/exec";
-
-          const response = await fetch(scriptURL, {
-            redirect: "follow",
-            method: "POST",
-            body: JSON.stringify(formDataObj),
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
-          });
-
-          const data = await response.json();
-
-          if (data.status === "success") {
-            messageDiv.textContent =
-              data.message || "Data submitted successfully!";
-            messageDiv.style.backgroundColor = "#48c78e";
-            messageDiv.style.color = "white";
-            form.reset();
-          } else {
-            throw new Error(data.message || "Submission failed");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          messageDiv.textContent = "Error: " + error.message;
-          messageDiv.style.backgroundColor = "#f14668";
-          messageDiv.style.color = "white";
-        } finally {
-          submitButton.disabled = false;
-          submitButton.classList.remove("is-loading");
-
-          setTimeout(() => {
-            messageDiv.textContent = "";
-            messageDiv.style.display = "none";
-          }, 4000);
+        if (age) {
+          formData.append("age", "Yes");
+        } else {
+          formData.append("age", "No");
         }
+        if (ex) {
+          formData.append("ex", "Yes");
+        } else {
+          formData.append("ex", "No");
+        }
+
+        fetch(scriptURL, { method: "POST", body: formData })
+          .then((response) => {
+            swal("Done", "Submitted Successfully.", "success");
+          })
+          .catch((error) => {
+            swal("Error", "Something went wrong. please try again!", "error");
+          });
       });
     </script>
-</body>
+  </body>
 </html>
