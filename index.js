@@ -1,3 +1,6 @@
+// This file is from an older tutorial and is not being used. 
+// I held onto the code in case we'd appreciate having snippets, but once the project is live you can safely delete this file. - Lis
+
 const DATA_ENTRY_SHEET_NAME = "Sheet1";
 const TIME_STAMP_COLUMN_NAME = "Timestamp";
 const FOLDER_ID = "";
