@@ -4,6 +4,6 @@ This app was set up following the tutorial in this YouTube Video: <https://www.y
 
 Google Form: <https://docs.google.com/spreadsheets/d/1-KlCWGEj40_gnPBbhzEGyEu5Ztko5koWNPr7YQP8CzE/edit?gid=0#gid=0>
 
-Updates to the main branch will automatically reflect on snapitsolutions.org.
+Updates to the `main` branch will automatically reflect on snapitsolutions.org.
 
 All hosting and domain related settings are managed through Cloudflare.
