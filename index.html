@@ -1,81 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SnapIT Office Check In</title>
-    <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="index.scss">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
-  </head>
-  <body class="bg-light">
-    <div class="container">
-      <div class="welcome">
-        <h1>Welcome to SnapIT Solutions</h1>
-        <h2>Please Sign Our Guestbook</h2>
-        <p>Your information is private and will not be sold or shared.</p>
-      </div>
-      <div class="form-container">
-        <h4 class="text-center mb-4">Form Submission to Google Sheet</h4>
-        <form id="submit-to-google-sheet">
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Name"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input
-              class="form-control"
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="slip">Phone:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="phone"
-              id="phone"
-              placeholder="Phone Number"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="loc">Note:</label>
-            <textarea
-              class="form-control"
-              name="note"
-              id="note"
-              placeholder="Note (optional)"
-            ></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>SnapIT Office Check In</title>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="index.scss" />
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+	</head>
+	<body class="bg-light">
+		<div class="container">
+			<div class="welcome">
+				<h1>Welcome to SnapIT Solutions</h1>
+				<h2>Please Sign Our Guestbook</h2>
+				<p>Your information is private and will not be sold or shared.</p>
+			</div>
+			<div class="form-container">
+				<h4 class="text-center mb-4">Form Submission to Google Sheet</h4>
+				<form id="submit-to-google-sheet">
+					<div class="form-group">
+						<label for="name">Name:</label>
+						<input class="form-control" type="text" name="name" id="name" placeholder="Name" required />
+					</div>
+					<div class="form-group">
+						<label for="email">Email:</label>
+						<input class="form-control" type="email" name="email" id="email" placeholder="Email" required />
+					</div>
+					<div class="form-group">
+						<label for="slip">Phone:</label>
+						<input class="form-control" type="text" name="phone" id="phone" placeholder="Phone Number" required />
+					</div>
+					<div class="form-group">
+						<label for="loc">Note:</label>
+						<textarea class="form-control" name="note" id="note" placeholder="Note (optional)"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block">Submit</button>
+				</form>
+			</div>
+		</div>
 
-    <script>
-      const scriptURL =                       
+		<script>
+			const scriptURL =
+				'https://script.google.com/macros/s/AKfycbxvZLpedeVMPB7KiR4WLTSXjr63BV5k6EEErinZNPst8GmXBV1RXI2d2kbFyxy6Im3f/exec';
+			const form = document.forms['submit-to-google-sheet'];
+
+			form.addEventListener('submit', (e) => {
+				e.preventDefault();
+				var formData = new FormData(form);
+
+				fetch(scriptURL, { method: 'POST', body: formData })
+					.then((response) => {
+						swal('Done', 'Submitted Successfully.', 'success');
+						form.reset(); // optional: clears the form after submit
+					})
+					.catch((error) => {
+						swal('Error', 'Something went wrong. Please try again!', 'error');
+					});
+			});
+		</script>
+
+		<!-- <script>
+      const scriptURL =
       "https://script.google.com/macros/s/AKfycbxvZLpedeVMPB7KiR4WLTSXjr63BV5k6EEErinZNPst8GmXBV1RXI2d2kbFyxy6Im3f/exec";
       const form = document.forms["submit-to-google-sheet"];
       form.addEventListener("submit", (e) => {
@@ -103,6 +92,6 @@
             swal("Error", "Something went wrong. please try again!", "error");
           });
       });
-    </script>
-  </body>
+    </script> -->
+	</body>
 </html>
