@@ -45,19 +45,29 @@
 
 		<script>
 			const scriptURL =
-				'https://script.google.com/macros/s/AKfycbyufDSInko56oWZTOmWbtNQITumbpMUanwCnoNA1Q_LmN6G32llyevtIYr41Akxnqtr/exec';
+				'https://script.google.com/macros/s/AKfycbwNACh2HtAdQIa_npIymyRvbECGqxcvgHowFVxs_Zdg3oKiEgsqd6SS_nm-7QkV7sew/exec';
 			const form = document.forms['submit-to-google-sheet'];
 
 			form.addEventListener('submit', (e) => {
 				e.preventDefault();
-				var formData = new FormData(form);
 
-				fetch(scriptURL, { method: 'POST', body: formData })
-					.then((response) => {
+				// Convert form data to URL-encoded format
+				const formData = new FormData(form);
+				const params = new URLSearchParams();
+				for (const [key, value] of formData) {
+					params.append(key, value);
+				}
+
+				fetch(scriptURL, {
+					method: 'POST',
+					body: params,
+				})
+					.then((response) => response.json()) // parse JSON response
+					.then(() => {
 						swal('Done', 'Submitted Successfully.', 'success');
 						form.reset(); // optional: clears the form after submit
 					})
-					.catch((error) => {
+					.catch(() => {
 						swal('Error', 'Something went wrong. Please try again!', 'error');
 					});
 			});
