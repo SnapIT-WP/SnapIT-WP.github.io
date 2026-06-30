@@ -1,76 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>SnapIT Office Check In</title>
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-		<link rel="stylesheet" href="index.scss" />
-		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
-	</head>
-	<body class="bg-light">
-		<div class="container">
-			<div class="welcome">
-				<h1>Welcome to SnapIT Solutions</h1>
-				<h2>Please Sign Our Guestbook</h2>
-				<p>Your information is private and will not be sold or shared.</p>
-			</div>
-			<div class="form-container">
-				<h4 class="text-center mb-4">Form Submission to Google Sheet</h4>
-				<form id="submit-to-google-sheet">
-					<div class="form-group">
-						<label for="name">Name:</label>
-						<input class="form-control" type="text" name="name" id="name" placeholder="Name" required />
-					</div>
-					<div class="form-group">
-						<label for="email">Email:</label>
-						<input class="form-control" type="email" name="email" id="email" placeholder="Email" required />
-					</div>
-					<div class="form-group">
-						<label for="slip">Phone:</label>
-						<input class="form-control" type="text" name="phone" id="phone" placeholder="Phone Number" required />
-					</div>
-					<div class="form-group">
-						<label for="loc">Note:</label>
-						<textarea class="form-control" name="note" id="note" placeholder="Note (optional)"></textarea>
-					</div>
-					<button type="submit" class="btn btn-primary btn-block">Submit</button>
-				</form>
-			</div>
-		</div>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>SnapIT Solutions — Guestbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15213B;
+    --ink-soft:#4A5673;
+    --paper:#FAF8F4;
+    --card:#FFFFFF;
+    --line:#E4E0D8;
+    --accent:#E8862E;
+    --accent-ink:#15213B;
+    --success:#2F8F6F;
+    --error:#D14B4B;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;height:100%;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+    overscroll-behavior:none;
+  }
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:28px 16px;
+  }
+  .wrap{ width:100%; max-width:880px; }
 
-		<script>
-			const scriptURL =
-				'https://script.google.com/macros/s/AKfycbwNACh2HtAdQIa_npIymyRvbECGqxcvgHowFVxs_Zdg3oKiEgsqd6SS_nm-7QkV7sew/exec';
-			const form = document.forms['submit-to-google-sheet'];
+  .brandbar{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:18px;
+    padding:0 4px;
+  }
+  .brandbar .mark{
+    font-family:'Outfit',sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:0.02em;
+    color:var(--ink);
+  }
+  .brandbar .mark span{ color:var(--accent); }
+  .brandbar .privacy{
+    font-size:0.8rem;
+    color:var(--ink-soft);
+  }
 
-			form.addEventListener('submit', (e) => {
-				e.preventDefault();
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(21,33,59,0.04), 0 12px 32px rgba(21,33,59,0.06);
+    padding:40px clamp(20px,5vw,52px) 36px;
+  }
 
-				// Convert form data to URL-encoded format
-				const formData = new FormData(form);
-				const params = new URLSearchParams();
-				for (const [key, value] of formData) {
-					params.append(key, value);
-				}
+  .card h1{
+    font-family:'Outfit',sans-serif;
+    font-weight:600;
+    font-size:clamp(1.5rem,3vw,1.9rem);
+    margin:0 0 4px;
+  }
+  .card .lede{
+    color:var(--ink-soft);
+    margin:0 0 30px;
+    font-size:1rem;
+  }
 
-				fetch(scriptURL, {
-					method: 'POST',
-					body: params,
-				})
-					.then((response) => response.json()) // parse JSON response
-					.then(() => {
-						swal('Done', 'Submitted Successfully.', 'success');
-						form.reset(); // optional: clears the form after submit
-					})
-					.catch(() => {
-						swal('Error', 'Something went wrong. Please try again!', 'error');
-					});
-			});
-		</script>
-	</body>
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px 20px;
+  }
+  .field{ display:flex; flex-direction:column; gap:7px; }
+  .field.full{ grid-column:1 / -1; }
+  .field label{
+    font-size:0.8rem;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="tel"]{
+    font-family:'Inter',sans-serif;
+    font-size:1.05rem;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1.5px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .field input:focus{
+    border-color:var(--accent);
+    background:var(--card);
+  }
+  .field .hint{ font-size:0.78rem; color:#9AA1B5; }
+
+  .sig-block{ margin-top:28px; }
+  .sig-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:9px;
+  }
+  .sig-head label{
+    font-size:0.8rem;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .clear-sig{
+    background:none;
+    border:none;
+    color:var(--accent);
+    font-weight:600;
+    font-size:0.85rem;
+    cursor:pointer;
+    padding:4px 6px;
+  }
+  .clear-sig:active{ opacity:0.6; }
+
+  .sig-pad-frame{
+    position:relative;
+    border:1.5px dashed var(--line);
+    border-radius:14px;
+    background:
+      repeating-linear-gradient(transparent, transparent 47px, var(--line) 48px) 0 0/100% 48px,
+      var(--paper);
+    overflow:hidden;
+    touch-action:none;
+  }
+  #sigCanvas{
+    display:block;
+    width:100%;
+    height:200px;
+    touch-action:none;
+  }
+  .sig-placeholder{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:14px;
+    color:#B7BBC9;
+    font-size:0.95rem;
+    pointer-events:none;
+    transition:opacity .12s ease;
+  }
+  .sig-placeholder.hidden{ opacity:0; }
+
+  .submit-row{ margin-top:30px; }
+  #submit-button{
+    width:100%;
+    padding:18px;
+    font-family:'Outfit',sans-serif;
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:#fff;
+    background:var(--ink);
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    transition:transform .08s ease, background .15s ease;
+  }
+  #submit-button:active{ transform:scale(0.99); }
+  #submit-button:disabled{ background:#9AA1B5; cursor:default; }
+
+  #message{
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:12px;
+    font-weight:600;
+    font-size:0.95rem;
+    text-align:center;
+    display:none;
+  }
+
+  /* Full-screen thank-you state */
+  .thankyou{
+    position:fixed; inset:0;
+    background:var(--ink);
+    color:#fff;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+    z-index:50;
+  }
+  .thankyou.show{ display:flex; }
+  .thankyou .big{
+    font-family:'Outfit',sans-serif;
+    font-weight:700;
+    font-size:clamp(2rem,5vw,3rem);
+    margin:0 0 10px;
+  }
+  .thankyou .small{
+    color:#B7BFD6;
+    font-size:1.05rem;
+  }
+  .thankyou .accent-dot{ color:var(--accent); }
+
+  @media (max-width:560px){
+    .grid{ grid-template-columns:1fr; }
+    .card{ padding:30px 18px 28px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brandbar">
+    <div class="mark">SnapIT<span>.</span>Solutions</div>
+    <div class="privacy">Your information is private and is never sold or shared.</div>
+  </div>
+
+  <div class="card">
+    <h1>Welcome — please sign our guestbook</h1>
+    <p class="lede">Fill in your details and sign below with your finger or a stylus.</p>
+
+    <form id="guestbook-form" autocomplete="off">
+      <div class="grid">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="Name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="Email" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="Phone">
+          <span class="hint">Optional</span>
+        </div>
+        <div class="field">
+          <label for="note">Who are you here to see?</label>
+          <input type="text" id="note" name="Note">
+        </div>
+      </div>
+
+      <div class="sig-block">
+        <div class="sig-head">
+          <label>Signature</label>
+          <button type="button" class="clear-sig" id="clear-sig">Clear</button>
+        </div>
+        <div class="sig-pad-frame">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-placeholder" id="sig-placeholder">Sign here ✕</div>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <input type="submit" id="submit-button" value="Sign In">
+      </div>
+
+      <div id="message"></div>
+    </form>
+  </div>
+</div>
+
+<div class="thankyou" id="thankyou">
+  <div class="big">Thanks<span class="accent-dot">,</span> <span id="ty-name">friend</span>!</div>
+  <div class="small">You're signed in. Have a great visit.</div>
+</div>
+
+<script>
+(function () {
+  // ───────────────────────────────────────────────────────────
+  // PASTE YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL HERE
+  // ───────────────────────────────────────────────────────────
+  const SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  const form = document.getElementById("guestbook-form");
+  const submitButton = document.getElementById("submit-button");
+  const messageDiv = document.getElementById("message");
+  const thankyou = document.getElementById("thankyou");
+  const tyName = document.getElementById("ty-name");
+
+  // ── Signature pad ──────────────────────────────────────────
+  const canvas = document.getElementById("sigCanvas");
+  const ctx = canvas.getContext("2d");
+  const placeholder = document.getElementById("sig-placeholder");
+  const clearSigBtn = document.getElementById("clear-sig");
+  let hasSignature = false;
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const ratio = window.devicePixelRatio || 1;
+    const imgData = hasSignature ? canvas.toDataURL() : null;
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "#15213B";
+    if (imgData) {
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
+      img.src = imgData;
+    }
+  }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function startDraw(e) {
+    drawing = true;
+    hasSignature = true;
+    placeholder.classList.add("hidden");
+    const p = getPos(e);
+    lastX = p.x; lastY = p.y;
+    canvas.setPointerCapture(e.pointerId);
+  }
+  function moveDraw(e) {
+    if (!drawing) return;
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+  function endDraw() { drawing = false; }
+
+  canvas.addEventListener("pointerdown", startDraw);
+  canvas.addEventListener("pointermove", moveDraw);
+  canvas.addEventListener("pointerup", endDraw);
+  canvas.addEventListener("pointerleave", endDraw);
+  canvas.addEventListener("pointercancel", endDraw);
+
+  function clearSignature() {
+    const rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, rect.height);
+    hasSignature = false;
+    placeholder.classList.remove("hidden");
+  }
+  clearSigBtn.addEventListener("click", clearSignature);
+
+  function resetKiosk() {
+    form.reset();
+    clearSignature();
+    messageDiv.style.display = "none";
+    messageDiv.textContent = "";
+  }
+
+  // ── Submit ──────────────────────────────────────────────────
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    if (!hasSignature) {
+      messageDiv.textContent = "Please sign before submitting.";
+      messageDiv.style.display = "block";
+      messageDiv.style.backgroundColor = "#FBEAEA";
+      messageDiv.style.color = "#D14B4B";
+      return;
+    }
+
+    messageDiv.textContent = "Submitting…";
+    messageDiv.style.display = "block";
+    messageDiv.style.backgroundColor = "#F1EEE6";
+    messageDiv.style.color = "#15213B";
+    submitButton.disabled = true;
+    submitButton.value = "Submitting…";
+
+    try {
+      const formData = new FormData(form);
+      const formDataObj = {};
+      for (let [key, value] of formData.entries()) {
+        formDataObj[key] = value;
+      }
+      formDataObj.signature = canvas.toDataURL("image/png");
+
+      const response = await fetch(SCRIPT_URL, {
+        redirect: "follow",
+        method: "POST",
+        body: JSON.stringify(formDataObj),
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+      });
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        tyName.textContent = formDataObj.Name ? formDataObj.Name.split(" ")[0] : "friend";
+        thankyou.classList.add("show");
+        resetKiosk();
+        setTimeout(() => thankyou.classList.remove("show"), 3500);
+      } else {
+        throw new Error(data.message || "Submission failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      messageDiv.textContent = "Error: " + error.message;
+      messageDiv.style.backgroundColor = "#FBEAEA";
+      messageDiv.style.color = "#D14B4B";
+    } finally {
+      submitButton.disabled = false;
+      submitButton.value = "Sign In";
+    }
+  });
+})();
+</script>
+</body>
 </html>
