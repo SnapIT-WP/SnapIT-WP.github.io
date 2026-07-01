@@ -40,6 +40,17 @@
   }
   .wrap{ width:100%; max-width:880px; }
 
+  .logo-wrap{
+    display:flex;
+    justify-content:center;
+    margin-bottom:18px;
+  }
+
+  .logo-wrap img{
+    width:120px;
+    max-width:32vw;
+    height:auto;
+  }
   .brandbar{
     display:flex;
     align-items:baseline;
@@ -50,7 +61,7 @@
   .brandbar .mark{
     font-family:'Outfit',sans-serif;
     font-weight:700;
-    font-size:1.05rem;
+    font-size:4.05rem;
     letter-spacing:0.02em;
     color:var(--ink);
   }
@@ -63,8 +74,8 @@
   .card{
     background:var(--card);
     border-radius:var(--radius);
-    border:1px solid var(--line);
-    box-shadow:0 1px 2px rgba(21,33,59,0.04), 0 12px 32px rgba(21,33,59,0.06);
+    /* border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(21,33,59,0.04), 0 12px 32px rgba(21,33,59,0.06); */
     padding:40px clamp(20px,5vw,52px) 36px;
   }
 
@@ -235,6 +246,9 @@
 <body>
 
 <div class="wrap">
+  <div class="logo-wrap">
+    <img src="SnapIT_SymbolOnly_Gradient.png" alt="SnapIT Solutions logo">
+  </div>
   <div class="brandbar">
     <div class="mark">SnapIT Solutions</div>
   </div>
@@ -242,7 +256,7 @@
   <div class="card">
     <h1>Welcome — please sign our guestbook</h1>
     <p class="lede">Fill in your details and sign below with your finger or a stylus.</p>
-    <div class="privacy">Your information is private and is never sold or shared.</div>
+    <p class="privacy">Your information is private and is never sold or shared.</p>
 
     <form id="guestbook-form" autocomplete="off">
       <div class="grid">
