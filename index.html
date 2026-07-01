@@ -417,7 +417,7 @@
       for (let [key, value] of formData.entries()) {
         formDataObj[key] = value;
       }
-      formDataObj.signature = canvas.toDataURL("image/png");
+      formDataObj.signature = canvas.toDataURL("image/jpeg", 0.75);
 
       const response = await fetch(SCRIPT_URL, {
         redirect: "follow",
