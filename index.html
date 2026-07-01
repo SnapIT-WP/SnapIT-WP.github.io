@@ -10,10 +10,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
+    --entry-block:#FFFFFF;
     --ink:#15213B;
     --ink-soft:#4A5673;
-    --paper:#FAF8F4;
-    --card:#FFFFFF;
+    --paper:#9AD9EA;
+    --card:#9AD9EA;
     --line:#E4E0D8;
     --accent:#E8862E;
     --accent-ink:#15213B;
@@ -54,7 +55,7 @@
     color:var(--ink);
   }
   .brandbar .mark span{ color:var(--accent); }
-  .brandbar .privacy{
+  .card .privacy{
     font-size:0.8rem;
     color:var(--ink-soft);
   }
@@ -101,14 +102,14 @@
     padding:14px 16px;
     border-radius:12px;
     border:1.5px solid var(--line);
-    background:var(--paper);
+    background:var(--entry-block);
     color:var(--ink);
     outline:none;
     transition:border-color .15s ease, background .15s ease;
   }
   .field input:focus{
     border-color:var(--accent);
-    background:var(--card);
+    /* background:var(--card); */
   }
   .field .hint{ font-size:0.78rem; color:#9AA1B5; }
 
@@ -143,7 +144,7 @@
     border-radius:14px;
     background:
       repeating-linear-gradient(transparent, transparent 47px, var(--line) 48px) 0 0/100% 48px,
-      var(--paper);
+      var(--entry-block);
     overflow:hidden;
     touch-action:none;
   }
@@ -235,13 +236,13 @@
 
 <div class="wrap">
   <div class="brandbar">
-    <div class="mark">SnapIT<span>.</span>Solutions</div>
-    <div class="privacy">Your information is private and is never sold or shared.</div>
+    <div class="mark">SnapIT Solutions</div>
   </div>
 
   <div class="card">
     <h1>Welcome — please sign our guestbook</h1>
     <p class="lede">Fill in your details and sign below with your finger or a stylus.</p>
+    <div class="privacy">Your information is private and is never sold or shared.</div>
 
     <form id="guestbook-form" autocomplete="off">
       <div class="grid">
